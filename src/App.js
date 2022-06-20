@@ -1,6 +1,7 @@
 import { useReducer } from "react";
-import DigitButton from "./Digitbutton";
+import DigitButton from "./Digitbutton.js";
 import "./styles.css";
+import OperationButton from "./Operationbutton.js";
 
 export const ACTIONS = {
   ADD_DIGIT: "add_digit",
@@ -11,6 +12,7 @@ export const ACTIONS = {
 
 function reducer(state, { type, payload }) {
   switch (type) {
+
     case ACTIONS.ADD_DIGIT:
       if (payload.digit == 0 && state.currentOperand == 0) return state;
       if (state.currentOperand == undefined) {
@@ -23,8 +25,23 @@ function reducer(state, { type, payload }) {
       }
     case ACTIONS.CLEAR:
       return {}
-  }
 
+    case ACTIONS.DEL_DIGIT:
+      return {
+        ...state,
+        currentOperand: state.currentOperand.slice(0, (state.currentOperand.length - 1))
+      }
+
+    case ACTIONS.OPERATION:
+      if (state.currentOperand == undefined)
+        return state;
+      return {
+        ...state,
+        prevOperand: state.currentOperand,
+        operation: payload.digit,
+        currentOperand: "",
+      }
+  }
 }
 
 function App() {
@@ -37,22 +54,22 @@ function App() {
         <div className="current-operand">{currentOperand}</div>
       </div>
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
-      <button>DEL</button>
-      <DigitButton dispatch={dispatch} digit={"÷"} />
-      <DigitButton dispatch={dispatch} digit={1} />
-      <DigitButton dispatch={dispatch} digit={2} />
-      <DigitButton dispatch={dispatch} digit={3} />
-      <DigitButton dispatch={dispatch} digit={"*"} />
-      <DigitButton dispatch={dispatch} digit={4} />
-      <DigitButton dispatch={dispatch} digit={5} />
-      <DigitButton dispatch={dispatch} digit={6} />
-      <DigitButton dispatch={dispatch} digit={"+"} />
-      <DigitButton dispatch={dispatch} digit={7} />
-      <DigitButton dispatch={dispatch} digit={8} />
-      <DigitButton dispatch={dispatch} digit={9} />
-      <DigitButton dispatch={dispatch} digit={"-"} />
-      <DigitButton dispatch={dispatch} digit={"."} />
-      <DigitButton dispatch={dispatch} digit={0} />
+      <button onClick={() => dispatch({ type: ACTIONS.DEL_DIGIT })}>DEL</button>
+      <OperationButton dispatch={dispatch} digit="÷" />
+      <DigitButton dispatch={dispatch} digit="1" />
+      <DigitButton dispatch={dispatch} digit="2" />
+      <DigitButton dispatch={dispatch} digit="3" />
+      <OperationButton dispatch={dispatch} digit="*" />
+      <DigitButton dispatch={dispatch} digit="4" />
+      <DigitButton dispatch={dispatch} digit="5" />
+      <DigitButton dispatch={dispatch} digit="6" />
+      <OperationButton dispatch={dispatch} digit="+" />
+      <DigitButton dispatch={dispatch} digit="7" />
+      <DigitButton dispatch={dispatch} digit="8" />
+      <DigitButton dispatch={dispatch} digit="9" />
+      <OperationButton dispatch={dispatch} digit="-" />
+      <DigitButton dispatch={dispatch} digit="." />
+      <DigitButton dispatch={dispatch} digit="0" />
 
       <button className="span-two">=</button>
     </div >
