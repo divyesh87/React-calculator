@@ -1,15 +1,36 @@
-import "./styles.css"
+import { useReducer } from "react";
+import "./styles.css";
+
+const ACTIONS = {
+  ADD_DIGIT: "add_digit",
+  OPERATION: "operation",
+  DEL_DIGIT: "delete_digit",
+
+}
+
+function reducer(state, { type, payload }) {
+  switch (type) {
+    case ACTIONS.ADD_DIGIT:
+      return {
+        ...state,
+        currentOperand: `${state.currentOperand || ""}${payload.digit}`
+      }
+  }
+
+}
 
 function App() {
+
+  const [{ currentOperand, prevOperand, operation }, dispatch] = useReducer(reducer, {})
   return (
     <div className="calc-grid">
       <div className="output">
-        <div className="prev-operand"></div>
-        <div className="current-operand"></div>
+        <div className="prev-operand">{prevOperand}{operation}</div>
+        <div className="current-operand">{currentOperand}</div>
       </div>
       <button className="span-two">AC</button>
       <button>DEL</button>
-      <button>÷</button>
+      <button onClick={dispatch({ type: ACTIONS.ADD_DIGIT, payload: "÷" })}>÷</button>
       <button>1</button>
       <button>2</button>
       <button>3</button>
